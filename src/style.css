@@ -71,14 +71,14 @@ body * {
   /* fade in-out */
   opacity: 0;
   visibility: hidden;
-  transition: all 0.3s ease;
+  transition: visibility 0.3s ease;
 }
 
 /* fade in-out */
 .ImageInfo.visible {
   opacity: 1;
   visibility: visible;
-  transition: all 0.3s ease;
+  transition: visibility 0.3s ease;
 }
 
 .ImageInfo .title {

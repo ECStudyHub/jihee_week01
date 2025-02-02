@@ -10,8 +10,8 @@ class CloseButton {
     this.$closeButton.addEventListener('click', onClick);
 
     /** 모달 닫힘: 키보드 esc를 누를 경우 */
-    const onKeyDown = (e) => {
-      if (e.key === 'Escape') onClick(e);
+    const onKeyDown = async (e) => {
+      if (e.key === 'Escape') await onClick(e);
     };
     window.addEventListener('keydown', onKeyDown);
   }

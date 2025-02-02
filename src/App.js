@@ -3,28 +3,37 @@ console.log('app is running!');
 class App {
   $target = null;
   data = [];
+  isListLoading = false;
 
   constructor($target) {
     this.$target = $target;
 
     this.searchInput = new SearchInput({
       $target,
-      onSearch: (keyword) => {
-        api.fetchCats(keyword).then(({ data }) => this.setState(data));
+      onSearch: async (keyword) => {
+        this.setState({ isListLoading: true }); // 로딩 시작
+        const { data } = await api.fetchCats(keyword);
+        this.setState({ data, isListLoading: false }); // 로딩 끝
       },
     });
 
     this.searchResult = new SearchResult({
       $target,
+      isListLoading: this.isListLoading,
       initialData: this.data,
-      onClick: (image) => {
-        const new_image = image;
-        api.getCatDetail(image.id).then(({ result }) => {
-          new_image = result;
-        });
+      onClick: async (image) => {
+        if (!image?.id) return;
         this.imageInfo.setState({
-          visible: true,
-          image: new_image,
+          data: { visible: true },
+          isModalLoading: true,
+        });
+        const { data } = await api.getCatDetail(image.id);
+        this.imageInfo.setState({
+          data: {
+            visible: true,
+            image: data,
+          },
+          isModalLoading: false,
         });
       },
     });
@@ -38,9 +47,17 @@ class App {
     });
   }
 
-  setState(nextData) {
+  setState({ data: nextData, isListLoading: nextIsListLoading }) {
     console.log(this);
-    this.data = nextData;
-    this.searchResult.setState(nextData);
+    if (nextData !== undefined) {
+      this.data = nextData;
+    }
+    if (nextIsListLoading !== undefined) {
+      this.isListLoading = nextIsListLoading;
+      this.searchResult.setState({ isListLoading: nextIsListLoading });
+    }
+    if (nextData !== undefined && nextIsListLoading !== undefined) {
+      this.searchResult.setState({ data: nextData, isListLoading: nextIsListLoading });
+    }
   }
 }

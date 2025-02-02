@@ -1,5 +1,6 @@
 class ImageInfo {
   $imageInfo = null;
+  isModalLoading = false;
   data = null;
 
   constructor({ $target, data }) {
@@ -13,19 +14,31 @@ class ImageInfo {
     this.render();
   }
 
-  setState(nextData) {
-    this.data = nextData;
+  setState({ data: nextData, isModalLoading: nextIsModalLoading }) {
+    if (nextData !== undefined && nextData.visible !== undefined && nextData.image !== undefined) {
+      this.data = nextData;
+    } else if (nextData !== undefined && nextData.visible !== undefined) {
+      this.data.visible = nextData.visible;
+    } else if (nextData !== undefined && nextData.image !== undefined) {
+      this.data.image = nextData.image;
+    }
+    if (nextIsModalLoading !== undefined) {
+      this.isModalLoading = nextIsModalLoading;
+    }
     this.render();
   }
 
   /** 모달 닫힘: close 버튼을 누르거나, 키보드 esc를 누를 경우 */
   closeModal(e) {
-    this.setState({ visible: false });
+    this.setState({ data: { visible: false } });
     this.render();
   }
 
   render() {
-    if (this.data.visible) {
+    if (this.data.visible && this.isModalLoading) {
+      this.$imageInfo.innerHTML = `<div>로딩중</div>`;
+      this.$imageInfo.classList.add('visible');
+    } else if (this.data.visible) {
       const { name, url, temperament, origin } = this.data.image;
 
       this.$imageInfo.innerHTML = `
