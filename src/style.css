@@ -5,8 +5,18 @@
   font-style: normal;
 }
 
+:root {
+  /* dark mode 처리 */
+  color-scheme: light dark;
+}
+
 html {
   box-sizing: border-box;
+}
+
+body {
+  color: light-dark(black, white);
+  background-color: light-dark(white, black);
 }
 
 body * {
@@ -28,7 +38,7 @@ body * {
 .SearchResult {
   margin-top: 10px;
   display: grid;
-  grid-template-columns: repeat(4, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   grid-gap: 10px;
 }
 
@@ -39,7 +49,7 @@ body * {
 }
 
 .SearchResult .item {
-  background-color: #eee;
+  background-color: light-dark(#eee, #111);
   display: inline-block;
   margin: 0 0 1em;
   width: 100%;
@@ -75,20 +85,11 @@ body * {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  background-color: #fff;
-  border: 1px solid #eee;
+  background-color: light-dark(white, black);
+  border: 1px solid light-dark(#eee, #111);
   border-radius: 5px;
 }
 
 .ImageInfo .content-wrapper img {
   width: 100%;
 }
-
-/* dark mode 처리
-@media (prefers-color-scheme: dark) {
-  body {
-    background-color: #000;
-    color: white;
-  }
-}
-*?
