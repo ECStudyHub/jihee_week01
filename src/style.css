@@ -55,10 +55,47 @@ body * {
   width: 100%;
 }
 
+.SearchSection {
+  width: 100%;
+  display: grid;
+  grid-gap: 2px;
+}
+
 .SearchInput {
   width: 100%;
-  font-size: 40px;
+  font-size: 20px;
   padding: 10px 15px;
+}
+
+.SearchKeywords {
+  width: 100%;
+  display: grid;
+  grid-gap: 1px;
+  display: none;
+}
+
+.SearchKeywords.visible {
+  display: block;
+  background-color: light-dark(#ddd, #222);
+  border: 1px solid light-dark(#111, #eee);
+  border-radius: 5px;
+}
+
+
+.SearchKeywords .keyword-item {
+  background-color: light-dark(#ddd, #222);
+  display: inline-block;
+  padding: 0.5em 0.2em;
+  width: 100%;;
+  z-index: 2000;
+}
+
+.SearchKeywords .keyword-item:hover {
+  cursor: pointer;
+}
+
+.SearchKeywords .keyword-item:not(:first-child) {
+  border-top: 1px solid light-dark(#111, #eee);
 }
 
 .ImageInfo {
@@ -67,18 +104,18 @@ body * {
   top: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: #0008;
   /* fade in-out */
   opacity: 0;
   visibility: hidden;
-  transition: visibility 0.3s ease;
+  transition: visibility 0.3s ease, opacity 0.3s ease;
 }
 
 /* fade in-out */
 .ImageInfo.visible {
   opacity: 1;
   visibility: visible;
-  transition: visibility 0.3s ease;
+  transition: visibility 0.3s ease, opacity 0.3s ease;
 }
 
 .ImageInfo .title {
