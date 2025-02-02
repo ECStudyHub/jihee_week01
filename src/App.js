@@ -54,7 +54,7 @@ class App {
     }
     if (nextIsListLoading !== undefined) {
       this.isListLoading = nextIsListLoading;
-      this.searchResult.setState({ isListLoading: nextIsListLoading });
+      this.searchResult?.setState({ isListLoading: nextIsListLoading });
     }
     if (nextData !== undefined && nextIsListLoading !== undefined) {
       this.searchResult.setState({ data: nextData, isListLoading: nextIsListLoading });

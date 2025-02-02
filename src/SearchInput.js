@@ -3,11 +3,13 @@ const TEMPLATE = '<input type="text">';
 class SearchInput {
   isPageLoaded = false;
   isInputFocused = false;
+  lastSearched = null;
   searchedKeywords = [];
   onSearch = null;
 
   constructor({ $target, onSearch }) {
     this.onSearch = onSearch;
+    this.lastSearched = localStorage.getItem('lastSearched') || '';
 
     const $searchSection = document.createElement('section');
     this.$searchSection = $searchSection;
@@ -27,17 +29,22 @@ class SearchInput {
     $target.appendChild($searchSection);
 
     $searchInput.addEventListener('keyup', async (e) => {
-      this.isInputFocused = false;
-      this.render();
-
       if (e.key === 'Enter') {
+        const keyword = e.target.value;
+        $searchInput.value = '';
+
         this.searchedKeywords = this.searchedKeywords.filter((keyword) => keyword !== e.target.value);
-        this.searchedKeywords.push(e.target.value);
+        this.searchedKeywords.push(keyword);
         if (this.searchedKeywords.length > 5) {
           this.searchedKeywords.shift();
         }
         console.log('this.searchedKeywords:', this.searchedKeywords);
-        await this.onSearch(e.target.value);
+
+        // 마지막 검색어 저장
+        localStorage.setItem('lastSearched', keyword);
+
+        this.render();
+        await this.onSearch(keyword);
       }
     });
 
@@ -57,12 +64,18 @@ class SearchInput {
     // 페이지 진입 시 포커스
     if (!this.isPageLoaded) {
       this.$searchInput.focus();
-      this.isPageLoaded = true;
     }
     console.log('SearchInput created.', this);
   }
 
   render() {
+    // 페이지 로드시 마지막 검색어로 검색 실행
+    if (!this.isPageLoaded && this.lastSearched) {
+      this.$searchInput.value = this.lastSearched;
+      this.onSearch(this.lastSearched);
+      this.isPageLoaded = true;
+    }
+
     if (this.isInputFocused) {
       this.$searchKeywords.innerHTML = this.searchedKeywords.map((keyword) => `<div class="keyword-item">${keyword}</div>`).join('');
 
